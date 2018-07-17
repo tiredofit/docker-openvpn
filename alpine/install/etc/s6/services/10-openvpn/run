@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+while [ ! -f /tmp/state/10-openvpn-init ]
+do
+  sleep 1
+done
+
+### OpenLDAP
+echo '** [openvpn] Starting OpenVPN..'
+exec ovpn_run

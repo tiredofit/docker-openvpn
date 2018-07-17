@@ -1,0 +1,89 @@
+#!/usr/bin/with-contenv bash
+
+### Sanity Test
+if [ ! -n "$HOSTNAME" ]; then
+      echo '** [openvpn] ERROR: No HOSTNAME variable entered! Exiting..'
+      exit 1
+fi
+
+if [ ! -f /etc/openvpn/ovpn_env.sh ]; then
+    echo '** [openvpn] First run detected, creating configuration files'
+    ovpn_genconfig -u udp://$HOSTNAME
+    cd /etc/openvpn
+    cp -R /assets/easy-rsa/vars /etc/openvpn
+    ovpn_initpki nopass
+fi
+
+if [ "$ENABLE_LDAP" = "TRUE" ] || [ "$ENABLE_LDAP" = "true" ]; then
+    echo "** [openvpn] Sorry! There is a bug in the Alpine Variant that does not allow LDAP! Please use the tiredofit/openvpn:debian variant for now"
+    exit 1
+    echo "** [openvpn] Enabling LDAP Authentication"
+    mkdir -p /etc/openvpn/auth
+    if [ ! -f /etc/openvpn/auth/auth-ldap.conf ]; then
+      rm -rf /etc/openvpn/auth/auth-ldap.conf
+    fi
+
+    if [ ! -n "$LDAP_URI" ]; then
+          echo '** [openvpn] ERROR: No LDAP_URI variable entered! Exiting..'
+          exit 1
+    fi
+
+    if [ ! -n "$LDAP_BIND_USER" ]; then
+          echo '** [openvpn] ERROR: No LDAP_BIND_USER variable entered! Exiting..'
+          exit 1
+    fi
+
+    if [ ! -n "$LDAP_BIND_PASS" ]; then
+          echo '** [openvpn] ERROR: No LDAP_BIND_PASS variable entered! Exiting..'
+          exit 1
+    fi
+
+    if [ ! -n "$LDAP_BASE_DN" ]; then
+          echo '** [openvpn] ERROR: No LDAP_BASE_DN variable entered! Exiting..'
+          exit 1
+    fi
+
+    if [ ! -n "$LDAP_SEARCH_FILTER" ]; then
+          echo '** [openvpn] ERROR: No LDAP_SEARCH_FILTER variable entered! Exiting..'
+          exit 1
+    fi
+
+    LDAP_FOLLOW_REFERRALS=${LDAP_FOLLOW_REFERRALS:-yes}
+    LDAP_TIMEOUT=${LDAP_TIMEOUT:-15}
+    LDAP_REQUIRE_GROUP=${LDAP_REQUIRE_GROUP:-false}
+    LDAP_GROUP_SEARCH_FILTER=${LDAP_GROUP_SEARCH_FILTER:-"(|(cn=developers)(cn=artists))"}
+    LDAP_GROUP_BASE_DN=${LDAP_GROUP_BASE_DN:-$LDAP_BASE_DN}
+    LDAP_GROUP_ATTRIBUTE=${LDAP_GROUP_ATTRIBUTE:-uniqueMember}
+
+    cat <<EOF > /etc/openvpn/auth/auth-ldap.conf
+<LDAP>
+URL             $LDAP_URI
+BindDN          $LDAP_BIND_USER
+Password        $LDAP_BIND_PASS
+Timeout         $LDAP_TIMEOUT
+FollowReferrals $LDAP_FOLLOW_REFERRALS
+</LDAP>
+
+<Authorization>
+BaseDN          "$LDAP_BASE_DN"
+SearchFilter    "$LDAP_SEARCH_FILTER"
+RequireGroup    $LDAP_REQUIRE_GROUP
+
+    <Group>
+      BaseDN    "$LDAP_GROUP_BASE_DN"
+      SearchFilter  "$LDAP_GROUP_SEARCH_FILTER"
+      MemberAttribute $LDAP_GROUP_ATTRIBUTE
+    </Group>
+
+</Authorization>
+EOF
+
+    sed -i '/openvpn-auth-ldap.so/c\plugin \/usr\/lib\/openvpn-auth-ldap.so \/etc\/openvpn\/auth\/auth-ldap.conf' /etc/openvpn/openvpn.conf
+else
+    sed -i '/openvpn-auth-ldap.so/c\#plugin \/usr\/lib\/openvpn-auth-ldap.so \/etc\/openvpn\/auth\/auth-ldap.conf' /etc/openvpn/openvpn.conf
+fi
+
+mkdir -p /var/log/openvpn
+
+mkdir -p /tmp/state
+touch /tmp/state/10-openvpn-init

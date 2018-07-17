@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv /bin/sh
+
+#
+# Get OpenVPN server status
+#
+### Set Debug Mode
+if [ "$DEBUG_MODE" = "TRUE" ] || [ "$DEBUG_MODE" = "true" ]; then
+    set -x
+fi
+
+set -e
+
+tail -F /tmp/openvpn.status

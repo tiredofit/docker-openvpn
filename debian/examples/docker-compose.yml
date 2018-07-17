@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  openvpn-app:
+    image: tiredofit/openvpn
+    container_name: openvpn-app
+    ports:
+    - 1194:1194/udp
+    environment:
+    - HOSTNAME=vpn.example.com
+    - ZABBIX_HOSTNAME=openvpn-app
+
+    - ENABLE_LDAP=false
+    - LDAP_URI=ldap://ldap.example.com:389
+    - LDAP_BASE_DN=dc=example,dc=com
+    - LDAP_BIND_USER=cn=admin,dc=example,dc=com
+    - LDAP_BIND_PASS=ldappassword
+    - LDAP_SEARCH_FILTER=(&(uid=%u)(accountStatus=active))
+    - LDAP_TIMEOUT=15
+    - LDAP_REQUIRE_GROUP=true
+    - LDAP_GROUP_BASE_DN=cn=groups,dc=example,dc=com
+    - LDAP_GROUP_SEARCH_FILTER=(|(cn=developers)(cn=artists))
+    - LDAP_GROUP_ATTRIBUTE=uniqueMember
+    volumes:
+    - ./data:/etc/openvpn
+    - ./logs:/var/log/openvpn
+    restart: always
+    devices:
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    privileged: true

@@ -1,0 +1,40 @@
+#!/usr/bin/with-contenv /bin/sh
+
+#
+# Import/export EasyRSA default settings
+#
+
+### Set Debug Mode
+if [ "$DEBUG_MODE" = "TRUE" ] || [ "$DEBUG_MODE" = "true" ]; then
+    set -x
+fi
+
+set -e
+
+if [ $# -lt 1 ]; then
+    echo "No command provided"
+    echo
+    echo "$0 export > /path/to/file"
+    echo "$0 import < /path/to/file"
+    exit 1
+fi
+
+cmd=$1
+shift
+
+case "$cmd" in
+    export)
+        if [ -f "$EASYRSA_VARS_FILE" ]; then
+            cat "$EASYRSA_VARS_FILE"
+        else
+            cat "/assets/easy-rsa/vars"
+        fi
+        ;;
+    import)
+        cat > "$EASYRSA_VARS_FILE"
+        ;;
+    *)
+        echo "Unknown cmd \"$cmd\""
+        exit 2
+        ;;
+esac
