@@ -2,11 +2,11 @@
 
 # Introduction
 
-Dockerfile to build an [OpenVPN](https://www.openvpn.net) container image to scan files or most commonly, mail messages.
+Dockerfile to build an [OpenVPN](https://www.openvpn.net) server container image to create an encrypted VPN tunnel
 
 * Customized to Allow LDAP Authentication
 
-* This Container uses a [customized Debian base](https://hub.docker.com/r/tiredofit/alpine) which includes [s6 overlay](https://github.com/just-containers/s6-overlay) enabled for PID 1 Init capabilities, [zabbix-agent](https://zabbix.org) for individual container monitoring, Cron also installed along with other tools (bash,curl, less, logrotate, nano, vim) for easier management. 
+* This Container uses a [customized Debian base](https://hub.docker.com/r/tiredofit/debian) which includes [s6 overlay](https://github.com/just-containers/s6-overlay) enabled for PID 1 Init capabilities, [zabbix-agent](https://zabbix.org) for individual container monitoring, Cron also installed along with other tools (bash,curl, less, logrotate, nano, vim) for easier management. 
 
 
 
@@ -72,7 +72,8 @@ The following directories are used for configuration and can be mapped for persi
 
 ### Environment Variables
 
-Along with the Environment Variables from the [Base image](https://hub.docker.com/r/tiredofit/alpine), below is the complete list of available options that can be used to customize your installation.
+Along with the Environment Variables from the [Base image](https://hub.docker.com/r/tiredofit/debian), below is the complete list of 
+available options that can be used to customize your installation.
 
 | Parameter | Description |
 |-----------|-------------|
