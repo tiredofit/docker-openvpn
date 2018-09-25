@@ -2,7 +2,7 @@
 
 # Introduction
 
-Dockerfile to build an [OpenVPN](https://www.openvpn.net) container image to scan files or most commonly, mail messages.
+Dockerfile to build an [OpenVPN](https://www.openvpn.net) server container image to create an encrypted VPN tunnel
 
 * This Container uses a [customized Alpine base](https://hub.docker.com/r/tiredofit/alpine) which includes [s6 overlay](https://github.com/just-containers/s6-overlay) enabled for PID 1 Init capabilities, [zabbix-agent](https://zabbix.org) for individual container monitoring, Cron also installed along with other tools (bash,curl, less, logrotate, nano, vim) for easier management. 
 
