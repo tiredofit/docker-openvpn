@@ -4,7 +4,9 @@
 
 Dockerfile to build an [OpenVPN](https://www.openvpn.net) container image to scan files or most commonly, mail messages.
 
-* This Container uses a [customized Alpine base](https://hub.docker.com/r/tiredofit/alpine) which includes [s6 overlay](https://github.com/just-containers/s6-overlay) enabled for PID 1 Init capabilities, [zabbix-agent](https://zabbix.org) for individual container monitoring, Cron also installed along with other tools (bash,curl, less, logrotate, nano, vim) for easier management. 
+* Customized to Allow LDAP Authentication
+
+* This Container uses a [customized Debian base](https://hub.docker.com/r/tiredofit/alpine) which includes [s6 overlay](https://github.com/just-containers/s6-overlay) enabled for PID 1 Init capabilities, [zabbix-agent](https://zabbix.org) for individual container monitoring, Cron also installed along with other tools (bash,curl, less, logrotate, nano, vim) for easier management. 
 
 
 
@@ -44,7 +46,8 @@ docker pull hub.docker.com/tiredofit/openvpn:(imagetag)
 ```
 
 The following image tags are available:
-* `latest` - Most recent release of Openvpn w/Alpine Linux 3.8
+* `alpine-latest` - Most recent release of Openvpn w/Alpine 3.8
+* `latest` - Most recent release of Openvpn w/Debian Stretch
 
 # Quick Start
 
@@ -74,6 +77,28 @@ Along with the Environment Variables from the [Base image](https://hub.docker.co
 | Parameter | Description |
 |-----------|-------------|
 | `HOSTNME` | Set the Hostname of the VPN Server for Certificate Generation |
+| `ENABLE_LDAP` | Enable LDAP Lookup Support `TRUE` or `FALSE` - Default `FALSE` |
+| `LDAP_URI` | URI of Ldap Server example 'ldap://ldap.example.com:389` |
+| `LDAP_BASE_DN` | BaseDN for Lookups eg `dc=example,dc=com` |
+| `LDAP_BIND_USER` | Bind Username for LDAP|
+| `LDAP_BIND_PASS` | Password for above username |
+| `LDAP_FOLLOW_REFERRALS` | LDAP Follow Referrals `yes` or `no` - Default `yes` |
+| `LDAP_TIMEOUT` | Timeout in seconds for LDAP - Default `15` |
+| `LDAP_SEARCH_FILTER` | Search filter e.g `(&(uid=%u))`
+| `LDAP_REQUIRE_GROUP` | Require a Group to Login `true` / `false` - Default `false` |
+| `LDAP_GROUP_BASE_DN` | LDAP Group Base DN e.g. `ou=groups,dc=example,dc=com` |
+| `LDAP_GROUP_ATTRIBUTE` | Group Attribute Default `uniqueMember` |
+| `LDAP_GROUP_SEARCH_FILTER` | Group search filter ie `(|(cn=developers)(cn=artists))` |
+
+
+    LDAP_FOLLOW_REFERRALS=${LDAP_FOLLOW_REFERRALS:-yes}
+    LDAP_TIMEOUT=${LDAP_TIMEOUT:-15}
+    LDAP_REQUIRE_GROUP=${LDAP_REQUIRE_GROUP:-false}
+    LDAP_GROUP_SEARCH_FILTER=${LDAP_GROUP_SEARCH_FILTER:-"(|(cn=developers)(cn=artists))"}
+    LDAP_GROUP_BASE_DN=${LDAP_GROUP_BASE_DN:-$LDAP_BASE_DN}
+    LDAP_GROUP_ATTRIBUTE=${LDAP_GROUP_ATTRIBUTE:-uniqueMember}
+
+
 ### Networking
 
 | Port | Description |
