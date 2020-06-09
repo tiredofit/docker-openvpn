@@ -1,51 +1,31 @@
 #!/usr/bin/with-contenv bash
 
+source /assets/functions/00-container
+
 ### Sanity Test
-if [ ! -n "$HOSTNAME" ]; then
-      echo '** [openvpn] ERROR: No HOSTNAME variable entered! Exiting..'
-      exit 1
-fi
+sanity_var $HOSTNAME "Hostname"
 
 if [ ! -f /etc/openvpn/ovpn_env.sh ]; then
-    echo '** [openvpn] First run detected, creating configuration files'
+    print_info "First run detected, creating configuration files"
     ovpn_genconfig -u udp://$HOSTNAME
     cd /etc/openvpn
     cp -R /assets/easy-rsa/vars /etc/openvpn
     ovpn_initpki nopass
 fi
 
-if [ "$ENABLE_LDAP" = "TRUE" ] || [ "$ENABLE_LDAP" = "true" ]; then
-    echo "** [openvpn] Enabling LDAP Authentication"
+if var_true $ENABLE_LDAP ; then
+    print_info "Enabling LDAP Authentication"
     mkdir -p /etc/openvpn/auth
     if [ ! -f /etc/openvpn/auth/auth-ldap.conf ]; then
       rm -rf /etc/openvpn/auth/auth-ldap.conf
     fi
 
-    if [ ! -n "$LDAP_URI" ]; then
-          echo '** [openvpn] ERROR: No LDAP_URI variable entered! Exiting..'
-          exit 1
-    fi
-
-    if [ ! -n "$LDAP_BIND_USER" ]; then
-          echo '** [openvpn] ERROR: No LDAP_BIND_USER variable entered! Exiting..'
-          exit 1
-    fi
-
-    if [ ! -n "$LDAP_BIND_PASS" ]; then
-          echo '** [openvpn] ERROR: No LDAP_BIND_PASS variable entered! Exiting..'
-          exit 1
-    fi
-
-    if [ ! -n "$LDAP_BASE_DN" ]; then
-          echo '** [openvpn] ERROR: No LDAP_BASE_DN variable entered! Exiting..'
-          exit 1
-    fi
-
-    if [ ! -n "$LDAP_SEARCH_FILTER" ]; then
-          echo '** [openvpn] ERROR: No LDAP_SEARCH_FILTER variable entered! Exiting..'
-          exit 1
-    fi
-
+    sanity_var LDAP_URI "LDAP URI"
+    sanity_var LDAP_BIND_USER "LDAP Bind User/DN"
+    sanity_var LDAP_BIND_PASS "LDAP Bind User Password"
+    sanity_var LDAP_BASE_DN "LDAP Base DN"
+    sanity_var LDAP_SEARCH_FILTER " LDAP Search Filter"
+    
     LDAP_FOLLOW_REFERRALS=${LDAP_FOLLOW_REFERRALS:-yes}
     LDAP_TIMEOUT=${LDAP_TIMEOUT:-15}
     LDAP_REQUIRE_GROUP=${LDAP_REQUIRE_GROUP:-false}
@@ -83,5 +63,4 @@ fi
 
 mkdir -p /var/log/openvpn
 
-mkdir -p /tmp/state
-touch /tmp/state/10-openvpn-init
+liftoff

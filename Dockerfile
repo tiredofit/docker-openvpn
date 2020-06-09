@@ -1,5 +1,5 @@
-FROM tiredofit/debian:stretch
-LABEL maintainer="Dave Conroy <dave@tiredofit.ca>"
+FROM tiredofit/debian:buster
+LABEL maintainer="Dave Conroy <dave at tiredofit dot ca>"
 
 ## Set Defaults
 ENV ENABLE_SMTP=FALSE \
@@ -12,11 +12,12 @@ ENV ENABLE_SMTP=FALSE \
 
 ##Install Dependencies
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y \
-        iptables \
-        openvpn \
-        openvpn-auth-ldap \
-        && \
+                iptables \
+                openvpn \
+                openvpn-auth-ldap \
+                && \
     \
     apt-get -y purge easy-rsa && \
     mkdir -p /usr/share/easy-rsa && \

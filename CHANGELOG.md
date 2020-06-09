@@ -1,3 +1,10 @@
+## 1.3.0 2020-06-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Update to support new tiredofit/debian 5.0.0 base image
+      - Debian Buster
+
+
 ## 1.2 2018-07-17 <dave at tiredofit dot ca>
 
 * Add LDAP Authentication
