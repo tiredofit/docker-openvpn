@@ -2,7 +2,8 @@ FROM tiredofit/debian:buster
 LABEL maintainer="Dave Conroy <dave at tiredofit dot ca>"
 
 ## Set Defaults
-ENV ENABLE_SMTP=FALSE \
+ENV EASYRSA_VERSION=3.0.8 \
+    ENABLE_SMTP=FALSE \
     OPENVPN=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_PKI=/etc/openvpn/pki \
@@ -21,7 +22,7 @@ RUN apt-get update && \
     \
     apt-get -y purge easy-rsa && \
     mkdir -p /usr/share/easy-rsa && \
-    curl -L https://github.com/OpenVPN/easy-rsa/archive/v3.0.4.tar.gz | tar xzf - --strip=2 -C /usr/share/easy-rsa && \
+    curl -sSL https://github.com/OpenVPN/easy-rsa/archive/v${EASYRSA_VERSION}.tar.gz | tar xzf - --strip=2 -C /usr/share/easy-rsa && \
     ln -s /usr/share/easy-rsa/easyrsa /usr/sbin && \
     \
 ## Cleanup

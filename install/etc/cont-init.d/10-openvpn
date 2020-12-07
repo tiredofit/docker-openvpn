@@ -2,9 +2,6 @@
 
 source /assets/functions/00-container
 
-### Sanity Test
-sanity_var $HOSTNAME "Hostname"
-
 if [ ! -f /etc/openvpn/ovpn_env.sh ]; then
     print_info "First run detected, creating configuration files"
     ovpn_genconfig -u udp://$HOSTNAME
@@ -13,7 +10,7 @@ if [ ! -f /etc/openvpn/ovpn_env.sh ]; then
     ovpn_initpki nopass
 fi
 
-if var_true $ENABLE_LDAP ; then
+if var_true ${ENABLE_LDAP} ; then
     print_info "Enabling LDAP Authentication"
     mkdir -p /etc/openvpn/auth
     if [ ! -f /etc/openvpn/auth/auth-ldap.conf ]; then
@@ -25,7 +22,7 @@ if var_true $ENABLE_LDAP ; then
     sanity_var LDAP_BIND_PASS "LDAP Bind User Password"
     sanity_var LDAP_BASE_DN "LDAP Base DN"
     sanity_var LDAP_SEARCH_FILTER " LDAP Search Filter"
-    
+
     LDAP_FOLLOW_REFERRALS=${LDAP_FOLLOW_REFERRALS:-yes}
     LDAP_TIMEOUT=${LDAP_TIMEOUT:-15}
     LDAP_REQUIRE_GROUP=${LDAP_REQUIRE_GROUP:-false}

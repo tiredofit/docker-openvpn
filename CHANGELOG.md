@@ -1,3 +1,12 @@
+## 1.3.1 2020-12-07 <dave at tiredofit dot ca>
+
+   ### Added
+      - Update to EasyRSA 3.0.8
+
+   ### Changed
+      - Code Cleanup
+
+
 ## 1.3.0 2020-06-09 <dave at tiredofit dot ca>
 
    ### Added
