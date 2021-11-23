@@ -1,3 +1,9 @@
+## 1.4.0 2021-11-23 <dave at tiredofit dot ca>
+
+   ### Added
+      - Debian Bullseye
+
+
 ## 1.3.1 2020-12-07 <dave at tiredofit dot ca>
 
    ### Added

@@ -1,6 +1,10 @@
-# hub.docker.com/tiredofit/openvpn
+# github.com/tiredofit/docker-openvpn
 
-## Introduction
+[![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/openvpn.svg)](https://hub.docker.com/r/tiredofit/openvpn)
+[![Docker Stars](https://img.shields.io/docker/stars/tiredofit/openvpn.svg)](https://hub.docker.com/r/tiredofit/openvpn)
+[![Docker Layers](https://images.microbadger.com/badges/image/tiredofit/openvpn.svg)](https://microbadger.com/images/tiredofit/openvpn)
+
+## About
 
 Dockerfile to build an [OpenVPN](https://www.openvpn.net) server container image to create an encrypted VPN tunnel
 
@@ -11,7 +15,7 @@ Dockerfile to build an [OpenVPN](https://www.openvpn.net) server container image
 
 [Changelog](CHANGELOG.md)
 
-## Authors
+## Maintainer
 
 - [Dave Conroy](https://github.com/tiredofit/)
 
@@ -35,7 +39,7 @@ Dockerfile to build an [OpenVPN](https://www.openvpn.net) server container image
     - [Shell Access](#shell-access)
    - [References](#references)
 
-## Prerequisites
+## Prerequisites and Assumptions
 
 None.
 
@@ -64,7 +68,7 @@ The following image tags are available:
 
 ## Configuration
 
-### Data-Volumes
+### Persistent Storage
 
 The following directories are used for configuration and can be mapped for persistent storage.
 

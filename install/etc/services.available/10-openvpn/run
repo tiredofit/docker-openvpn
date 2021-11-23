@@ -7,5 +7,5 @@ check_container_initialized
 check_service_initialized init
 liftoff
 
-print_info "Starting OpenVPN"
+print_start "Starting OpenVPN"
 exec ovpn_run
