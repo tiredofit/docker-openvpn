@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv /bin/sh
+#!/command/with-contenv /bin/sh
 
 #
 # Get OpenVPN server status

@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv /bin/bash
+#!/command/with-contenv /bin/bash
 
 #
 # Generate OpenVPN users via google authenticator

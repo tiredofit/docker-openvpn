@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv /bin/bash
+#!/command/with-contenv /bin/bash
 ## @licence MIT <http://opensource.org/licenses/MIT>
 ## @author Copyright (C) 2015 Robin Schneider <ypid@riseup.net>
 
